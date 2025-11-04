@@ -83,29 +83,23 @@ const CheckoutPage = ({ cart, totalAmount, onBack, onCheckoutComplete }: Checkou
                       <h3 className="font-bold text-white">{item.title}</h3>
                       <p className="text-gray-400 text-sm">{item.tagline}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-white font-bold">
-                        {item.amount === "TBA" ? "TBA" : `₹${item.amount}`}
-                      </p>
-                      <p className="text-blue-400 font-bold">
-                        {item.amount === "TBA" ? "TBA" : `₹${item.amount}`}
-                      </p>
-                    </div>
                   </div>
                 ))}
               </div>
 
               <div className="mt-6 pt-4 border-t border-gray-800">
                 <div className="flex justify-between items-center">
-                  <span className="text-xl font-bold text-white">Total:</span>
-                  <span className="text-2xl font-black text-blue-400">
-                    {cart.some(item => item.amount === "TBA") 
-                      ? "TBA" 
-                      : `₹${cart.reduce((total, item) => {
-                          if (item.amount === "TBA") return total;
-                          const amount = parseFloat(item.amount.replace('₹', '').replace(',', '')) || 0;
-                          return total + amount;
-                        }, 0)}`}
+                  <span className="text-xl font-bold text-white">Total for {cart.length} event{cart.length > 1 ? 's' : ''}:</span>
+                  <span className="text-2xl font-black text-white">
+                    ₹{(() => {
+                      const eventCount = cart.length;
+                      if (eventCount === 0) return 0;
+                      if (eventCount === 1) return 100;
+                      if (eventCount === 2) return 160;
+                      if (eventCount === 3) return 210;
+                      if (eventCount >= 4) return 250;
+                      return 0;
+                    })()}
                   </span>
                 </div>
               </div>
@@ -220,7 +214,7 @@ const CheckoutPage = ({ cart, totalAmount, onBack, onCheckoutComplete }: Checkou
                 <button
                   type="submit"
                   disabled={isProcessing}
-                  className="w-full bg-blue-400 text-black font-black py-4 rounded-lg hover:bg-blue-300 transition disabled:opacity-50"
+                  className="w-full bg-white text-black font-black py-4 rounded-lg hover:bg-gray-200 transition disabled:opacity-50"
                 >
                   {isProcessing ? 'PROCESSING...' : `PAY ₹${totalAmount}`}
                 </button>

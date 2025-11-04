@@ -74,15 +74,17 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
     );
   };
 
-  // Calculate total amount
+  // Calculate total amount based on number of events
   const calculateTotal = () => {
-    return cart.reduce((total, item) => {
-      // Handle "TBA" or non-numeric amounts
-      if (item.amount === "TBA") return total;
-      
-      const amount = parseFloat(item.amount.replace('₹', '').replace(',', '')) || 0;
-      return total + (amount * item.quantity);
-    }, 0);
+    const eventCount = cart.length;
+    
+    if (eventCount === 0) return 0;
+    if (eventCount === 1) return 100;
+    if (eventCount === 2) return 160;
+    if (eventCount === 3) return 210;
+    if (eventCount >= 4) return 250;
+    
+    return 0;
   };
 
   // Proceed to checkout
@@ -105,7 +107,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
           }}>
-            <Code className="w-20 h-20 text-blue-400 animate-pulse" style={{ animationDelay: `${i * 0.2}s` }} />
+            <Code className="w-20 h-20 text-white animate-pulse" style={{ animationDelay: `${i * 0.2}s` }} />
           </div>
         ))}
         {[...Array(20)].map((_, i) => (
@@ -121,7 +123,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
           }}>
-            <Cpu className="w-24 h-24 text-blue-300 animate-pulse" style={{ animationDelay: `${i * 0.4}s` }} />
+            <Cpu className="w-24 h-24 text-white animate-pulse" style={{ animationDelay: `${i * 0.4}s` }} />
           </div>
         ))}
         {[...Array(15)].map((_, i) => (
@@ -137,7 +139,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(96, 165, 250, 0.3)" strokeWidth="1"/>
+            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(21, 48, 81, 0.49)" strokeWidth="1"/>
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#grid)" />
@@ -257,7 +259,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Ms. Saakshi J Shetty",
       contact: "+91 9606469357",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-purple-500 to-pink-600",
       studentCoordinator: "Mr. Lohith Gowda (9019844009)"
@@ -273,7 +275,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Mr. Thejash",
       contact: "+91 8075773051",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-blue-500 to-cyan-600",
       studentCoordinator: "Ms. Sinchana P S (7483081046)"
@@ -289,7 +291,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Ms. Spoorthi B Shetty",
       contact: "+91 9482906943",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-indigo-500 to-purple-600",
       studentCoordinator: "Ms. Bandhavya K S (8904827379)"
@@ -305,7 +307,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Ms. Deepthi",
       contact: "+91 9880501735",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-green-500 to-emerald-600",
       studentCoordinator: "Mr. Santosh M (9611535134)"
@@ -321,7 +323,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Ms. Ankitha Shetty",
       contact: "+91 8310866320",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-orange-500 to-red-600",
       studentCoordinator: "Ms. S B Poorvi (9353181551)"
@@ -337,7 +339,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Mrs. Latha S",
       contact: "+91 9611095629",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-red-500 to-pink-600",
       studentCoordinator: "Ms. Preethishree S D (8618010509)"
@@ -353,7 +355,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Ms. Meenakshi",
       contact: "+91 8088994353",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-teal-500 to-blue-600",
       studentCoordinator: "Mr. Karthik A T (9353493357)"
@@ -369,7 +371,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Ms. Kyathi",
       contact: "+91 8296849083",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-pink-500 to-rose-600",
       studentCoordinator: "Janhavi Rathod (7208773651)"
@@ -385,7 +387,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Mr. Savan Shetty",
       contact: "+91 6360841765",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-blue-600 to-indigo-700",
       studentCoordinator: "Nihal S Kolambkar (7204196221)"
@@ -401,7 +403,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Ananya J",
       contact: "+91 9845790058",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-yellow-600 to-orange-700",
       studentCoordinator: "S H Adithya (8073256702)"
@@ -417,7 +419,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Anupama",
       contact: "TBA",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-pink-500 to-purple-600",
       studentCoordinator: "Sowparnika Shetty (9113810849)"
@@ -433,7 +435,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Suryakanth",
       contact: "+91 9980811082",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-green-600 to-emerald-700",
       studentCoordinator: "Chirag Shetty (8792876922)"
@@ -449,7 +451,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Diana D'Souza",
       contact: "+91 7795604890",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-red-500 to-orange-600",
       studentCoordinator: "Charan Reddy (9731596319)"
@@ -465,7 +467,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Pooja",
       contact: "TBA",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-purple-600 to-pink-600",
       studentCoordinator: "Jefin (7510593275)"
@@ -481,7 +483,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "5:30 PM",
       organizer: "Prof. Sheryl Iona",
       contact: "+91 8197201536",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-red-600 to-rose-700",
       studentCoordinator: "Akash singh (8296856531)"
@@ -497,7 +499,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Vignesh",
       contact: "+91 7204273146",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-amber-600 to-yellow-700",
       studentCoordinator: "Ananya rao (8147158229)"
@@ -513,7 +515,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Mohammed Hashim",
       contact: "+91 9061293705",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-orange-600 to-red-700",
       studentCoordinator: "Ganesh (7483896493)"
@@ -529,7 +531,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Suryakanth",
       contact: "+91 9980811082",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-blue-600 to-indigo-700",
       studentCoordinator: "Kishan kumar (7558892264)"
@@ -545,7 +547,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Kyathi",
       contact: "+91 8296849083",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-purple-600 to-pink-700",
       studentCoordinator: "Siri V S (6362184296)"
@@ -561,7 +563,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Spoorthi B Shetty",
       contact: "+91 9482906943",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-rose-500 to-pink-600",
       studentCoordinator: "Akshitha (7975059513)"
@@ -577,7 +579,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Shwetha Rai",
       contact: "+91 7349013217",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-indigo-500 to-purple-600",
       studentCoordinator: "Sushmitha S k (9353249945)"
@@ -593,7 +595,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Thejash",
       contact: "+91 8075773051",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-blue-500 to-cyan-600",
       studentCoordinator: "Chandan Ponnappa (6360162184)"
@@ -609,7 +611,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Ashwini",
       contact: "+91 9743079974",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-teal-500 to-green-600",
       studentCoordinator: "Ananya R (9148136288)"
@@ -625,7 +627,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Prafulla Shetty",
       contact: "+91 7204549248",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-pink-500 to-rose-600",
       studentCoordinator: "Harshitha Banjan (7559457095)"
@@ -641,7 +643,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Deepthi",
       contact: "+91 9880501735",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-gray-600 to-slate-700",
       studentCoordinator: "Joyston (8296839379)"
@@ -657,7 +659,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Roshal Lynshal Nazareth",
       contact: "+91 7899506648",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-orange-500 to-red-600",
       studentCoordinator: "Smruthi sudhakaran (8139885955)"
@@ -673,13 +675,13 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "Prof. Savan Shetty",
       contact: "+91 6360841765",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "team",
       gradient: "from-red-500 to-orange-600",
       studentCoordinator: "Jayasagar (7483013936)"
     },
     {
-      id: 12,
+      id: 28,
       title: "Innovation Summit",
       category: "special",
       tagline: "Shape the future",
@@ -689,7 +691,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       time: "TBA",
       organizer: "TBA",
       contact: "TBA",
-      amount: "TBA",
+      amount: "₹100",
       teamSize: "individual",
       gradient: "from-teal-500 to-green-600"
     }
@@ -705,23 +707,6 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-400 to-cyan-500 py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <button className="mb-8 px-6 py-2 bg-black text-blue-400 font-bold rounded-lg hover:bg-gray-900 transition">
-            ← BACK
-          </button>
-          <h1 className="text-5xl md:text-7xl font-black text-black mb-4 tracking-tight">
-            SAMBHRAM EVENTS
-          </h1>
-          <p className="text-xl md:text-2xl text-black font-semibold">
-            → Build, Compete, and Leave Your Mark
-          </p>
-          <button className="mt-8 px-8 py-3 bg-black text-blue-400 font-bold rounded-lg hover:bg-gray-900 transition flex items-center gap-2">
-            <span>📥</span> EVENT RULEBOOK
-          </button>
-        </div>
-      </div>
 
       {/* Category Filter */}
       <div className="bg-gray-900 py-6 px-4 sticky top-0 z-10">
@@ -733,7 +718,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
                 onClick={() => setActiveCategory(category.id)}
                 className={`px-6 py-2 font-bold rounded-lg transition ${
                   activeCategory === category.id
-                    ? 'bg-blue-400 text-black'
+                    ? 'bg-white text-black'
                     : 'bg-gray-800 text-white hover:bg-gray-700'
                 }`}
               >
@@ -770,51 +755,57 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
 
                   {/* Content Section */}
                   <div className="md:w-3/5 p-6">
-                    <h3 className="text-2xl font-black mb-2 text-blue-400">
+                    <h3 className="text-2xl font-black mb-2 text-white">
                       → {event.title}
                     </h3>
                     <p className="text-gray-400 italic mb-3">{event.tagline}</p>
                     <p className="text-gray-300 text-sm mb-4">{event.description}</p>
 
                     <div className="space-y-2 text-sm">
-                      <div className="flex items-center gap-2 text-blue-400">
+                      <div className="flex items-center gap-2 text-white">
                         <Calendar className="w-4 h-4" />
                         <span className="font-semibold">Date:</span>
                         <span className="text-white">{event.date}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-blue-400">
+                      <div className="flex items-center gap-2 text-white">
                         <Clock className="w-4 h-4" />
                         <span className="font-semibold">Time:</span>
                         <span className="text-white">{event.time}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-blue-400">
+                      <div className="flex items-center gap-2 text-white">
                         <User className="w-4 h-4" />
                         <span className="font-semibold">Organizer:</span>
                         <span className="text-white">{event.organizer}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-blue-400">
+                      <div className="flex items-center gap-2 text-white">
                         <Phone className="w-4 h-4" />
                         <span className="font-semibold">Contact:</span>
                         <span className="text-white">{event.contact}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-blue-400">
-                        <DollarSign className="w-4 h-4" />
-                        <span className="font-semibold">Amount:</span>
-                        <span className="text-white font-bold">{event.amount}</span>
-                        <span className="text-gray-400">/ {event.teamSize}</span>
-                      </div>
                     </div>
 
                     <button 
-                      onClick={() => addToCart(event)}
-                      disabled={cart.some(item => item.id === event.id)}
+                      onClick={() => {
+                        if (cart.some(item => item.id === event.id)) {
+                          removeFromCart(event.id);
+                        } else if (cart.length < 4) {
+                          addToCart(event);
+                        }
+                      }}
+                      disabled={cart.length >= 4 && !cart.some(item => item.id === event.id)}
                       className={`mt-6 w-full font-black py-3 rounded-lg transition ${
-                        cart.some(item => item.id === event.id)
+                        cart.length >= 4 && !cart.some(item => item.id === event.id)
                           ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                          : "bg-blue-400 text-black hover:bg-blue-300"
+                          : cart.some(item => item.id === event.id)
+                            ? "bg-red-500 text-white hover:bg-red-600"
+                            : "bg-white text-black hover:bg-gray-200"
                       }`}
                     >
-                      {cart.some(item => item.id === event.id) ? "ADDED TO CART" : "ADD TO CART"}
+                      {cart.length >= 4 && !cart.some(item => item.id === event.id)
+                        ? "MAXIMUM EVENTS REACHED" 
+                        : cart.some(item => item.id === event.id) 
+                          ? "REMOVE FROM CART" 
+                          : "ADD TO CART"}
                     </button>
                   </div>
                 </div>
@@ -837,7 +828,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       {cart.length > 0 && (
         <button
           onClick={() => setShowCart(true)}
-          className="fixed bottom-6 right-6 bg-blue-400 text-black p-4 rounded-full shadow-lg hover:bg-blue-300 transition z-50"
+          className="fixed bottom-6 right-6 bg-white text-black p-4 rounded-full shadow-lg hover:bg-gray-200 transition z-50"
         >
           <div className="flex items-center">
             <ShoppingCart className="w-6 h-6" />
@@ -871,9 +862,6 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
                         <div className="flex-1">
                           <h3 className="font-bold text-white">{item.title}</h3>
                           <p className="text-gray-400 text-sm">{item.tagline}</p>
-                          <p className="text-blue-400 font-bold">
-                            {item.amount === "TBA" ? "TBA" : `₹${item.amount}`}
-                          </p>
                         </div>
                         <div className="flex items-center space-x-2">
                           <span className="text-white font-bold">1</span>
@@ -890,25 +878,16 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
 
                   <div className="mt-8 pt-6 border-t border-gray-700">
                     <div className="flex justify-between items-center mb-6">
-                      <span className="text-xl font-bold text-white">Total:</span>
-                      <span className="text-2xl font-black text-blue-400">
-                        {cart.some(item => item.amount === "TBA") 
-                          ? "TBA (Some events have TBA pricing)" 
-                          : `₹${calculateTotal()}`}
+                      <span className="text-xl font-bold text-white">Total for {cart.length} event{cart.length > 1 ? 's' : ''}:</span>
+                      <span className="text-2xl font-black text-white">
+                        ₹{calculateTotal()}
                       </span>
                     </div>
                     <button
                       onClick={handleProceedToCheckout}
-                      disabled={cart.some(item => item.amount === "TBA")}
-                      className={`w-full font-black py-4 rounded-lg transition ${
-                        cart.some(item => item.amount === "TBA")
-                          ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                          : "bg-blue-400 text-black hover:bg-blue-300"
-                      }`}
+                      className="w-full bg-white text-black font-black py-4 rounded-lg hover:bg-gray-200 transition"
                     >
-                      {cart.some(item => item.amount === "TBA")
-                        ? "WAIT FOR PRICING UPDATE"
-                        : "PROCEED TO CHECKOUT"}
+                      PROCEED TO CHECKOUT
                     </button>
                   </div>
                 </>

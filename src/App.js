@@ -52,7 +52,7 @@ function App() {
           </p>
           <button
             onClick={handleBackToEvents}
-            className="px-8 py-4 bg-blue-400 text-black font-bold rounded-lg hover:bg-blue-300 transition"
+            className="px-8 py-4 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition"
           >
             BACK TO EVENTS
           </button>
