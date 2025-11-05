@@ -1,216 +1,91 @@
-import React, { useState } from 'react';
-import { ArrowLeft, CheckCircle } from 'lucide-react';
-
-interface CartItem {
-  id: number;
-  title: string;
-  tagline: string;
-  amount: string;
-  quantity: number;
-}
+import React from 'react';
+import { ArrowLeft, CreditCard } from 'lucide-react';
 
 interface CheckoutPageProps {
-  cart: CartItem[];
+  cart: any[];
   totalAmount: number;
   onBack: () => void;
   onCheckoutComplete: () => void;
 }
 
-const CheckoutPage = ({ cart, totalAmount, onBack, onCheckoutComplete }: CheckoutPageProps) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    college: ''
-  });
-  const [paymentMethod, setPaymentMethod] = useState('upi');
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleCheckout = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsProcessing(true);
-    
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      onCheckoutComplete();
-    }, 2000);
-  };
-
+const CheckoutPage: React.FC<CheckoutPageProps> = ({ 
+  cart, 
+  totalAmount, 
+  onBack, 
+  onCheckoutComplete 
+}) => {
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Grid Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-      
-      <div className="relative z-10">
-        {/* Back Button */}
-        <div className="p-6">
-          <button
-            onClick={onBack}
-            className="px-6 py-2 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition flex items-center gap-2"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            BACK TO EVENTS
-          </button>
-        </div>
-
-        {/* Main Content */}
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
-              CHECKOUT
-            </h1>
-            <p className="text-xl text-gray-400">Complete your registration</p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Order Summary */}
-            <div className="bg-gray-900 rounded-2xl p-6">
-              <h2 className="text-2xl font-bold text-white mb-6">Order Summary</h2>
-              
-              <div className="space-y-4">
-                {cart.map(item => (
-                  <div key={item.id} className="flex justify-between items-center py-3 border-b border-gray-800">
-                    <div>
-                      <h3 className="font-bold text-white">{item.title}</h3>
-                      <p className="text-gray-400 text-sm">{item.tagline}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-gray-800">
-                <div className="flex justify-between items-center">
-                  <span className="text-xl font-bold text-white">Total for {cart.length} event{cart.length > 1 ? 's' : ''}:</span>
-                  <span className="text-2xl font-black text-white">
-                    ₹{totalAmount}
-                  </span>
+    <div className="min-h-screen bg-black text-white p-4">
+      <div className="max-w-4xl mx-auto">
+        <button
+          onClick={onBack}
+          className="flex items-center text-gray-400 hover:text-white mb-6 transition-colors"
+        >
+          <ArrowLeft className="mr-2" />
+          Back to Events
+        </button>
+        
+        <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Order Summary */}
+          <div>
+            <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+            <div className="bg-gray-900 rounded-lg p-4">
+              {cart.map((item, index) => (
+                <div key={index} className="flex justify-between py-2 border-b border-gray-700">
+                  <span>{item.name || 'Event'}</span>
+                  <span>₹100</span>
                 </div>
+              ))}
+              <div className="flex justify-between py-2 mt-4 font-bold">
+                <span>Total:</span>
+                <span>₹{totalAmount}</span>
               </div>
             </div>
-
-            {/* Payment Form */}
-            <div className="bg-gray-900 rounded-2xl p-6">
-              <h2 className="text-2xl font-bold text-white mb-6">Participant Details</h2>
-              
-              <form onSubmit={handleCheckout} className="space-y-6">
-                {/* Name */}
+          </div>
+          
+          {/* Payment Form */}
+          <div>
+            <h2 className="text-xl font-bold mb-4">Payment Details</h2>
+            <div className="bg-gray-900 rounded-lg p-4">
+              <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-white mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Enter your full name"
-                    className="w-full px-4 py-3 bg-black border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gray-700"
-                    required
+                  <label className="block text-sm font-medium mb-1">Card Number</label>
+                  <input 
+                    type="text" 
+                    placeholder="1234 5678 9012 3456" 
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white"
                   />
                 </div>
-
-                {/* Email */}
-                <div>
-                  <label className="block text-sm font-bold text-white mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Enter your email"
-                    className="w-full px-4 py-3 bg-black border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gray-700"
-                    required
-                  />
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label className="block text-sm font-bold text-white mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="Enter your phone number"
-                    className="w-full px-4 py-3 bg-black border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gray-700"
-                    required
-                  />
-                </div>
-
-                {/* College */}
-                <div>
-                  <label className="block text-sm font-bold text-white mb-2">
-                    College/Institution *
-                  </label>
-                  <input
-                    type="text"
-                    name="college"
-                    value={formData.college}
-                    onChange={handleChange}
-                    placeholder="Enter your college name"
-                    className="w-full px-4 py-3 bg-black border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gray-700"
-                    required
-                  />
-                </div>
-
-                {/* Payment Method */}
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-3">Payment Method</h3>
-                  <div className="space-y-3">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="upi"
-                        checked={paymentMethod === 'upi'}
-                        onChange={() => setPaymentMethod('upi')}
-                        className="mr-3"
-                      />
-                      <span className="text-white">UPI Payment</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="card"
-                        checked={paymentMethod === 'card'}
-                        onChange={() => setPaymentMethod('card')}
-                        className="mr-3"
-                      />
-                      <span className="text-white">Credit/Debit Card</span>
-                    </label>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Expiry Date</label>
+                    <input 
+                      type="text" 
+                      placeholder="MM/YY" 
+                      className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">CVV</label>
+                    <input 
+                      type="text" 
+                      placeholder="123" 
+                      className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white"
+                    />
                   </div>
                 </div>
-
-                {/* Terms */}
-                <div className="text-center">
-                  <p className="text-gray-400 text-sm">
-                    By proceeding, you agree to our Terms and Conditions
-                  </p>
-                </div>
-
-                {/* Submit Button */}
+                
                 <button
-                  type="submit"
-                  disabled={isProcessing}
-                  className="w-full bg-white text-black font-black py-4 rounded-lg hover:bg-gray-200 transition disabled:opacity-50"
+                  onClick={onCheckoutComplete}
+                  className="w-full bg-white text-black font-bold py-3 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors"
                 >
-                  {isProcessing ? 'PROCESSING...' : `PAY ₹${totalAmount}`}
+                  <CreditCard className="mr-2" />
+                  PAY ₹{totalAmount}
                 </button>
-              </form>
+              </div>
             </div>
           </div>
         </div>

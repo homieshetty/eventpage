@@ -31,6 +31,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
+  const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
 
   const handleRegister = (event: Event) => {
     setSelectedEvent(event);
@@ -38,6 +39,14 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
 
   const handleBack = () => {
     setSelectedEvent(null);
+  };
+
+  // Handle card flip
+  const handleCardFlip = (eventId: number) => {
+    setFlippedCards(prev => ({
+      ...prev,
+      [eventId]: !prev[eventId]
+    }));
   };
 
   // Add event to cart (only once)
@@ -136,7 +145,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       category: "technical",
       tagline: "Blind Coding Challenge",
       description: "Code without seeing your screen! Max 2 participants. Languages: C, Python, Java. Two rounds of intense coding.",
-      image: "/BCimage.jpg",
+      image: "/Eyesoff.jpg",
       date: "TBA",
       time: "TBA",
       organizer: "Ms. Spoorthi B Shetty",
@@ -544,6 +553,22 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
       amount: "₹100",
       teamSize: "individual",
       gradient: "from-teal-500 to-green-600"
+    },
+    // Add new events here following the same structure
+    {
+      id: 29,
+      title: "Example",
+      category: "special",
+      tagline: "Example",
+      description: "Example.",
+      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
+      date: "TBA",
+      time: "TBA",
+      organizer: "TBA",
+      contact: "TBA",
+      amount: "₹100",
+      teamSize: "individual",
+      gradient: "from-teal-500 to-green-600"
     }
   ];
 
@@ -597,55 +622,68 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
           {/* Removed category-specific backgrounds to prevent overlay on bg.gif */}
           
           <div className="max-w-7xl mx-auto px-4 py-12 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
               {filteredEvents.map(event => (
                 <div
                   key={event.id}
-                  className="bg-transparent rounded-2xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 border border-white/20"
+                  className="relative w-64 h-80 cursor-pointer perspective-1000"
+                  onClick={() => handleCardFlip(event.id)}
                 >
-                  <div className="flex flex-col md:flex-row">
-                    {/* Image Section */}
-                    <div className="md:w-2/5 relative overflow-hidden">
+                  {/* Flip container */}
+                  <div 
+                    className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${
+                      flippedCards[event.id] ? 'rotate-y-180' : ''
+                    }`}
+                  >
+                    {/* Front side - Image only */}
+                    <div className={`absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden border border-white/20 ${
+                      flippedCards[event.id] ? 'hidden' : ''
+                    }`}>
                       <img
                         src={event.image}
                         alt={event.title}
-                        className="w-full h-64 md:h-full object-cover"
+                        className="w-full h-full object-cover"
                       />
                     </div>
 
-                    {/* Content Section */}
-                    <div className="md:w-3/5 p-6">
-                      <h3 className="text-2xl font-black mb-2 text-white">
-                         {event.title}
-                      </h3>
-                      <p className="text-gray-300 italic mb-3">{event.tagline}</p>
-                      <p className="text-gray-400 text-sm mb-4">{event.description}</p>
+                    {/* Back side - Event details */}
+                    <div className={`absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden border border-white/20 rotate-y-180 bg-black/30 backdrop-blur-lg p-4 flex flex-col ${
+                      flippedCards[event.id] ? '' : 'hidden'
+                    }`}>
+                      <div className="flex-1 overflow-y-auto">
+                        <h3 className="text-xl font-black mb-2 text-white">
+                          {event.title}
+                        </h3>
+                        <p className="text-gray-300 italic mb-3 text-sm">{event.tagline}</p>
+                        <p className="text-gray-400 text-xs mb-4">{event.description}</p>
 
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-2 text-white">
-                          <Calendar className="w-4 h-4" />
-                          <span className="font-semibold">Date:</span>
-                          <span className="text-white">{event.date}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-white">
-                          <Clock className="w-4 h-4" />
-                          <span className="font-semibold">Time:</span>
-                          <span className="text-white">{event.time}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-white">
-                          <User className="w-4 h-4" />
-                          <span className="font-semibold">Organizer:</span>
-                          <span className="text-white">{event.organizer}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-white">
-                          <Phone className="w-4 h-4" />
-                          <span className="font-semibold">Contact:</span>
-                          <span className="text-white">{event.contact}</span>
+                        <div className="space-y-1 text-xs">
+                          <div className="flex items-center gap-2 text-white">
+                            <Calendar className="w-3 h-3" />
+                            <span className="font-semibold">Date:</span>
+                            <span className="text-white">{event.date}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-white">
+                            <Clock className="w-3 h-3" />
+                            <span className="font-semibold">Time:</span>
+                            <span className="text-white">{event.time}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-white">
+                            <User className="w-3 h-3" />
+                            <span className="font-semibold">Organizer:</span>
+                            <span className="text-white">{event.organizer}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-white">
+                            <Phone className="w-3 h-3" />
+                            <span className="font-semibold">Contact:</span>
+                            <span className="text-white">{event.contact}</span>
+                          </div>
                         </div>
                       </div>
 
                       <button 
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           if (cart.some(item => item.id === event.id)) {
                             removeFromCart(event.id);
                           } else if (cart.length < 4) {
@@ -653,7 +691,7 @@ const EventRegistrationPage = ({ onProceedToCheckout }: EventRegistrationPagePro
                           }
                         }}
                         disabled={cart.length >= 4 && !cart.some(item => item.id === event.id)}
-                        className={`mt-6 w-full font-black py-3 rounded-lg transition ${
+                        className={`mt-3 w-full font-black py-2 rounded-lg text-xs transition ${
                           cart.length >= 4 && !cart.some(item => item.id === event.id)
                             ? "bg-gray-600/30 text-gray-300 cursor-not-allowed"
                             : cart.some(item => item.id === event.id)
