@@ -1,36 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, User, Phone, DollarSign, Code, Database, Cpu, Terminal, Music, Mic, Drama, Users, Sparkles, Trophy, Lightbulb, Rocket, ShoppingCart, X } from 'lucide-react';
 
-// Event object structure:
-// id: number
-// title: string
-// category: string
-// tagline: string
-// description: string
-// image: string
-// date: string
-// time: string
-// organizer: string
-// contact: string
-// amount: string
-// teamSize: string
-// gradient: string
-// studentCoordinator: string (optional)
-// isTeamEvent: boolean (optional)
-
-// CartItem object structure (extends Event):
-// quantity: number
-
-// TeamData object structure:
-// teamName: string
-// members: array
-
-// EventRegistrationPageProps object structure:
-// onProceedToCheckout: function (optional)
-// teamData: object (optional)
-// setTeamData: function (optional)
-// onCategoryChange: function (optional)
-
 const EventRegistrationPage = ({ 
   cart,
   setCart,
@@ -46,7 +16,6 @@ const EventRegistrationPage = ({
   const [showTeamModal, setShowTeamModal] = useState(false);
   const [selectedTeamEvent, setSelectedTeamEvent] = useState(null);
 
-  // Function to update team data for an event
   const updateTeamData = (eventId, data) => {
     if (setTeamData) {
       const newData = { ...(teamData || {}), [eventId]: data };
@@ -62,40 +31,29 @@ const EventRegistrationPage = ({
     setSelectedEvent(null);
   };
 
-  // Handle card flip - only one card can be open at a time
   const handleCardFlip = (eventId) => {
-    // If the clicked card is already open, close it
     if (flippedCards[eventId]) {
       setFlippedCards({});
     } else {
-      // Close all cards and open only the clicked card
       setFlippedCards({ [eventId]: true });
     }
   };
 
-  // Add event to cart (only once)
   const addToCart = (event) => {
-    // For team events, we no longer redirect immediately
-    // Just add the event to cart like any other event
     setCart(prevCart => {
-      // Check if event already exists in cart
       const existingItem = prevCart.find(item => item.id === event.id);
       if (existingItem) {
-        // Event already in cart, don't add duplicate
         return prevCart;
       } else {
-        // Add new event to cart with quantity 1
         return [...prevCart, { ...event, quantity: 1 }];
       }
     });
   };
 
-  // Remove event from cart
   const removeFromCart = (eventId) => {
     setCart(prevCart => prevCart.filter(item => item.id !== eventId));
   };
 
-  // Update quantity in cart
   const updateQuantity = (eventId, quantity) => {
     if (quantity < 1) {
       removeFromCart(eventId);
@@ -109,7 +67,6 @@ const EventRegistrationPage = ({
     );
   };
 
-  // Calculate total amount based on number of events
   const calculateTotal = () => {
     const eventCount = cart.length;
     
@@ -118,28 +75,21 @@ const EventRegistrationPage = ({
     if (eventCount === 2) return 200;
     if (eventCount === 3) return 250;
     if (eventCount === 4) return 300;
-    // For more than 4 events, first 4 cost 300rs and each additional event costs 100rs
     return 300 + (eventCount - 4) * 100;
   };
 
-  // Proceed to checkout
   const handleProceedToCheckout = () => {
     if (onProceedToCheckout) {
       onProceedToCheckout(cart, calculateTotal());
     } else {
-      // Default behavior if no callback is provided
       alert(`Proceeding to checkout. Total amount: ₹${calculateTotal()}`);
     }
   };
 
-  // Handle category change with transition
   const handleCategoryChange = (categoryId) => {
-    // Call the parent's onCategoryChange if provided
     if (onCategoryChange) {
       onCategoryChange(categoryId);
     }
-    // Set a delay to allow transition to complete halfway before changing category
-    // The transition takes 1500ms to close, so we switch page at that point
     setTimeout(() => {
       setActiveCategory(categoryId);
     }, 1500);
@@ -593,7 +543,6 @@ const EventRegistrationPage = ({
       teamSize: "individual",
       gradient: "from-teal-500 to-green-600"
     },
-    // Add new events here following the same structure
     {
       id: 29,
       title: "Example",
@@ -608,25 +557,8 @@ const EventRegistrationPage = ({
       amount: "Varies",
       teamSize: "team",
       gradient: "from-teal-500 to-green-600",
-      isTeamEvent: true // Marking this as a team event
+      isTeamEvent: true
     }
-    // Example of how to add a new team event:
-    // {
-    //   id: 30,
-    //   title: "New Team Event",
-    //   category: "technical", // or "cultural" or "special"
-    //   tagline: "Exciting team challenge",
-    //   description: "Description of your team event goes here.",
-    //   image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&q=80",
-    //   date: "TBA",
-    //   time: "TBA",
-    //   organizer: "Organizer Name",
-    //   contact: "+91 9876543210",
-    //   amount: "₹100",
-    //   teamSize: "team",
-    //   gradient: "from-blue-500 to-cyan-600",
-    //   isTeamEvent: true // This property triggers the team registration flow
-    // }
   ];
 
   const categories = [
@@ -650,40 +582,48 @@ const EventRegistrationPage = ({
         }}
       ></div>
       
-      {/* Content wrapper to ensure content is above background */}
+      {/* Content wrapper */}
       <div className="relative z-10">
 
         {/* Category Filter */}
-        <div className="bg-gray-900 py-6 px-4 z-20">
+        <div className="bg-gray-900 py-4 px-4 z-20">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-wrap gap-4 justify-center">
-              {categories.map(category => (
-                <button
-                  key={category.id}
-                  onClick={() => handleCategoryChange(category.id)}
-                  className={`px-6 py-2 font-bold rounded-lg transition tracking-wider ${
-                    activeCategory === category.id
-                      ? 'bg-white text-black'
-                      : 'bg-gray-800 text-white hover:bg-gray-700'
-                  }`}
-                >
-                  {category.name}
-                </button>
-              ))}
+            {/* Logo and Category Buttons Container */}
+            <div className="flex flex-col md:flex-row items-center md:items-center gap-4 md:gap-8">
+              {/* Logo - Left aligned on desktop, centered on mobile */}
+              <div className="flex justify-center md:justify-start flex-shrink-0">
+                <img src="/logofinal4.png" alt="Logo" className="object-contain h-20 md:h-24 lg:h-28" />
+              </div>
+              
+              {/* Category Buttons - Take remaining space on desktop */}
+              <div className="flex flex-row gap-3 md:gap-4 w-full md:flex-1 justify-center md:justify-end">
+                {categories.map(category => (
+                  <button
+                    key={category.id}
+                    onClick={() => handleCategoryChange(category.id)}
+                    className={`flex-1 md:flex-initial md:min-w-[140px] lg:min-w-[160px] px-4 md:px-6 py-3 font-bold rounded-lg transition tracking-wider border-2 text-sm md:text-base ${
+                      activeCategory === category.id
+                        ? 'bg-white text-black border-white'
+                        : 'bg-transparent text-white border-blue-500 hover:bg-blue-500/20'
+                    }`}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Events Grid with Category-Specific Background */}
+        {/* Events Grid */}
         <div className="relative min-h-screen">
-          {/* Removed category-specific backgrounds to prevent overlay on bg.gif */}
-          
-          <div className="max-w-7xl mx-auto px-4 py-12 relative z-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
+          <div className="max-w-7xl mx-auto px-4 py-6 md:py-12 relative z-10">
+            {/* Mobile: Single column, Desktop: Grid */}
+            <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 items-center md:justify-items-center">
               {filteredEvents.map(event => (
                 <div
                   key={event.id}
-                  className="relative w-64 h-80 cursor-pointer perspective-1000"
+                  className="relative w-full max-w-md md:w-64 h-96 md:h-80 cursor-pointer perspective-1000"
                   onClick={() => handleCardFlip(event.id)}
                 >
                   {/* Flip container */}
@@ -692,8 +632,8 @@ const EventRegistrationPage = ({
                       flippedCards[event.id] ? 'rotate-y-180' : ''
                     }`}
                   >
-                    {/* Front side - Image only */}
-                    <div className={`absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden border border-white/20 ${
+                    {/* Front side - Image with title overlay */}
+                    <div className={`absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden border-2 border-blue-500/50 ${
                       flippedCards[event.id] ? 'hidden' : ''
                     }`}>
                       <img
@@ -701,27 +641,38 @@ const EventRegistrationPage = ({
                         alt={event.title}
                         className="w-full h-full object-cover"
                       />
+                      {/* Title overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end">
+                        <div className="p-4 w-full">
+                          <h3 className="text-2xl md:text-xl font-black text-white tracking-wider">
+                            {event.title}
+                          </h3>
+                          <p className="text-blue-400 text-sm md:text-xs mt-1 tracking-wide">{event.tagline}</p>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Back side - Event details */}
-                    <div className={`absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden border border-white/20 rotate-y-180 bg-black/30 backdrop-blur-lg p-4 flex flex-col ${
+                    <div className={`absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden border-2 border-blue-500/50 rotate-y-180 bg-black/90 backdrop-blur-lg p-5 md:p-4 flex flex-col ${
                       flippedCards[event.id] ? '' : 'hidden'
                     }`}>
                       <div className="flex-1 overflow-y-auto">
-                        <h3 className="text-xl font-black mb-2 text-white tracking-wider">
+                        <h3 className="text-2xl md:text-xl font-black mb-2 text-white tracking-wider">
                           {event.title}
                         </h3>
-                        <p className="text-gray-300 italic mb-3 text-sm tracking-wide">{event.tagline}</p>
-                        <p className="text-gray-400 text-xs mb-4 tracking-wide">{event.description}</p>
+                        <p className="text-blue-400 italic mb-3 text-base md:text-sm tracking-wide">{event.tagline}</p>
+                        <p className="text-gray-300 text-sm md:text-xs mb-4 tracking-wide leading-relaxed">{event.description}</p>
 
-                        <div className="space-y-1 text-xs tracking-wide">
+                        <div className="space-y-2 text-sm md:text-xs tracking-wide">
                           <div className="flex items-center gap-2 text-white">
-                            <Calendar className="w-3 h-3" />
-                            <span className="font-semibold">Date :</span>
-                            <span className="text-white">{event.date}</span>
-                            <Clock className="w-3 h-3 ml-2" />
-                            <span className="font-semibold">Time :</span>
-                            <span className="text-white">{event.time}</span>
+                            <Calendar className="w-4 h-4 md:w-3 md:h-3 text-blue-500" />
+                            <span className="font-semibold">Date:</span>
+                            <span className="text-gray-300">{event.date}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-white">
+                            <Clock className="w-4 h-4 md:w-3 md:h-3 text-blue-500" />
+                            <span className="font-semibold">Time:</span>
+                            <span className="text-gray-300">{event.time}</span>
                           </div>
                         </div>
                       </div>
@@ -735,10 +686,10 @@ const EventRegistrationPage = ({
                             addToCart(event);
                           }
                         }}
-                        className={`mt-3 w-full font-black py-2 rounded-lg text-xs transition ${
+                        className={`mt-4 w-full font-black py-3 md:py-2 rounded-lg text-sm md:text-xs transition border-2 ${
                           cart.some(item => item.id === event.id)
-                            ? "bg-red-500/60 text-white hover:bg-red-600/70"
-                            : "bg-white/10 text-white hover:bg-white/20 border border-white/20"
+                            ? "bg-red-500 text-white border-red-500 hover:bg-red-600 hover:border-red-600"
+                            : "bg-transparent text-white border-blue-500 hover:bg-blue-500/20"
                         }`}
                       >
                         <span className="tracking-wider">
@@ -768,19 +719,19 @@ const EventRegistrationPage = ({
         {cart.length > 0 && (
           <button
             onClick={() => setShowCart(true)}
-            className="fixed bottom-6 right-6 bg-white text-black p-4 rounded-full shadow-lg hover:bg-gray-200 transition z-50"
+            className="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition z-50 border-2 border-white"
           >
             <div className="flex items-center">
               <ShoppingCart className="w-6 h-6" />
-              <span className="ml-2 font-bold tracking-wider">{cart.length}</span>
+              <span className="ml-2 font-bold tracking-wider text-lg">{cart.length}</span>
             </div>
           </button>
         )}
 
         {/* Cart Modal */}
         {showCart && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border-2 border-blue-500/50">
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-black text-white tracking-wider">Your Cart</h2>
@@ -798,27 +749,25 @@ const EventRegistrationPage = ({
                   <>
                     <div className="space-y-4">
                       {cart.map(item => (
-                        <div key={item.id} className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
+                        <div key={item.id} className="flex items-center justify-between p-4 bg-gray-800 rounded-lg border border-blue-500/30">
                           <div className="flex-1">
                             <h3 className="font-bold text-white tracking-wider">{item.title}</h3>
                             <p className="text-gray-400 text-sm tracking-wide">{item.tagline}</p>
-                            {/* Show team info if team data exists */}
                             {teamData && teamData[item.id] && (
-                              <p className="text-gray-300 text-xs mt-1 tracking-wide">
-                                Team : {teamData[item.id].teamName} ({teamData[item.id].members.length} members)
+                              <p className="text-blue-400 text-xs mt-1 tracking-wide">
+                                Team: {teamData[item.id].teamName} ({teamData[item.id].members.length} members)
                               </p>
                             )}
                           </div>
                           <div className="flex items-center space-x-2">
                             <span className="text-white font-bold">1</span>
-                            {/* Add team members button for team events */}
                             {(item.teamSize === 'team' || item.isTeamEvent) && (
                               <button
                                 onClick={() => {
                                   setSelectedTeamEvent(item);
                                   setShowTeamModal(true);
                                 }}
-                                className="ml-2 px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+                                className="ml-2 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 border border-blue-400"
                               >
                                 {(teamData && teamData[item.id]) ? 'Edit Team' : 'Add Team'}
                               </button>
@@ -834,16 +783,16 @@ const EventRegistrationPage = ({
                       ))}
                     </div>
 
-                    <div className="mt-8 pt-6 border-t border-gray-700">
+                    <div className="mt-8 pt-6 border-t border-blue-500/30">
                       <div className="flex justify-between items-center mb-6">
-                        <span className="text-xl font-bold text-white tracking-wider">Total for {cart.length} event{cart.length > 1 ? 's' : ''} :</span>
-                        <span className="text-2xl font-black text-white tracking-wider">
-                          ₹ {calculateTotal()}
+                        <span className="text-xl font-bold text-white tracking-wider">Total for {cart.length} event{cart.length > 1 ? 's' : ''}:</span>
+                        <span className="text-2xl font-black text-blue-500 tracking-wider">
+                          ₹{calculateTotal()}
                         </span>
                       </div>
                       <button
                         onClick={handleProceedToCheckout}
-                        className="w-full bg-white text-black font-black py-4 rounded-lg hover:bg-gray-200 transition"
+                        className="w-full bg-blue-500 text-white font-black py-4 rounded-lg hover:bg-blue-600 transition border-2 border-blue-400"
                       >
                         <span className="tracking-wider">PROCEED TO CHECKOUT</span>
                       </button>
@@ -888,13 +837,6 @@ const EventRegistrationPage = ({
   );
 };
 
-// Team Member Form Component
-// TeamMemberFormProps object structure:
-// event: CartItem
-// initialData: TeamData (optional)
-// onSave: function
-// onCancel: function
-
 const TeamMemberForm = ({ event, initialData, onSave, onCancel }) => {
   const [teamName, setTeamName] = useState(initialData?.teamName || '');
   const [teamMembers, setTeamMembers] = useState(initialData?.members || [
@@ -908,13 +850,12 @@ const TeamMemberForm = ({ event, initialData, onSave, onCancel }) => {
   };
 
   const addMember = () => {
-    // Determine max team size from event.teamSize (e.g., "2-4 members" or "team")
     let maxMembers = 4;
     if (event.teamSize.includes('-')) {
       const parts = event.teamSize.split('-');
       maxMembers = parseInt(parts[1]) || 4;
     } else if (event.teamSize === 'team') {
-      maxMembers = 4; // Default for generic "team"
+      maxMembers = 4;
     }
     
     if (teamMembers.length < maxMembers) {
@@ -932,7 +873,6 @@ const TeamMemberForm = ({ event, initialData, onSave, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Validate required fields
     for (let i = 0; i < teamMembers.length; i++) {
       const member = teamMembers[i];
       if (!member.name || !member.email || !member.phone || !member.college) {
@@ -949,7 +889,6 @@ const TeamMemberForm = ({ event, initialData, onSave, onCancel }) => {
     onSave({ teamName, members: teamMembers });
   };
 
-  // Determine max team size for display
   let teamSizeText = event.teamSize;
   if (event.teamSize === 'team') {
     teamSizeText = '2-4 members';
@@ -957,7 +896,6 @@ const TeamMemberForm = ({ event, initialData, onSave, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Team Name */}
       <div>
         <label className="block text-sm font-bold text-white mb-2 tracking-wider">
           Team Name *
@@ -972,7 +910,6 @@ const TeamMemberForm = ({ event, initialData, onSave, onCancel }) => {
         />
       </div>
 
-      {/* Team Members */}
       <div>
         <h3 className="text-lg font-bold text-white mb-4 tracking-wider">Team Members</h3>
         
@@ -1047,7 +984,6 @@ const TeamMemberForm = ({ event, initialData, onSave, onCancel }) => {
           ))}
         </div>
         
-        {/* Add Member Button */}
         <div className="mt-4">
           <button
             type="button"
@@ -1062,7 +998,6 @@ const TeamMemberForm = ({ event, initialData, onSave, onCancel }) => {
         </div>
       </div>
 
-      {/* Buttons */}
       <div className="flex justify-end space-x-3 pt-4">
         <button
           type="button"
